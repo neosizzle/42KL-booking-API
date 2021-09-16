@@ -46,6 +46,17 @@ The following steps are important, as the set up the environment for you to run 
 3. Click on the Link tab and paste the following: `https://www.getpostman.com/collections/272a46b1d4ccbc7b390b`
 4. You should see a bunch of requests in the collection, feel free to tinker around and discover what they do when you send those requests.
 
+## Documentation
+- `GET /` Returns a very generic welcome message
+- `GET /bookings` Returns all the bookings that are created in the system
+- `GET /bookings/:id` Returns the booking detail which has obejctID `:id`
+- `GET /seats` Returns all the seats that are created in the system
+- `GET /users` Returns all the users that are created in the system
+- `GET /users/:name` Returns the user which has intra username `:name`
+- `POST /users` Adds a user to the system. Request body required.
+- `POST /bookings` Adds a booking to the system. Request body required.
+- `POST /seats` Adds a seat to the system. Request body required.
+
 >Some elements might still be unstable, please to tell me if something goes wrong!
 
 > Explanation on how stuff works coming soon!
