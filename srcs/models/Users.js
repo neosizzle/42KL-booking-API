@@ -12,6 +12,7 @@ const mongoose = require('mongoose')
 ** 
 ** intra_id		The intranet id of the user (suppose they have any)
 ** inrta_name	The intranet username of the user
+** email		The email of the user
 ** admin		1 if user is admin and 0 if not
 */
 // NOTE: We dont store passwords here, since authentication is done by 42network API.

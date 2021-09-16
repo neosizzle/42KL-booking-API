@@ -40,6 +40,8 @@ The following steps are important, as the set up the environment for you to run 
 5. In the second line, replace it with `MONGODB_URL=mongodb://localhost:27017/42klbooking` . If you are using another mongoDB provider, paste your own connection string instead.
 6. `npm run start` to start the program.
 
+> If you want to populte your data with dummy values beforehand, run npm run seed
+
 ## Testing
 1. Launch Postman.
 2. Click the Import button beside the big orange New at the top left.

@@ -3,6 +3,7 @@
 */
 
 const express = require('express');
+const { consoleLogEnabled } = require('mongoose-seed');
 const router = express.Router();
 const Booking = require("../models/Bookings")
 const Seat = require("../models/Seats");
@@ -76,18 +77,26 @@ router.get('/bookings/:id', async (req, res)=>
 router.post('/bookings', async (req, res)=>{
 	let	new_booking;
 	let	seat;
+	let	user;
+	let	count;
 
 	//might need to delete key property in the future
 	new_booking = new Booking(req.body);
 	try
 	{
 		seat = await Seat.findOne({name : new_booking.seat_name})
-		if (!await User.findOne({intra_name : new_booking.booked_by}))
+		user = await User.findOne({intra_name : new_booking.booked_by});
+		count = await Booking.countDocuments({booked_by : new_booking.booked_by, booked_date : new_booking.booked_date})
+		if (count > 0)
+			throw new Error("Can only book once per day");
+		if (!user)
 			throw new Error("Invalid User");
 		if (!seat)
 			throw new Error("Seat not found");
-		if (seat.last_booked && (seat.last_booked.getTime() == new_booking.booked_date.getTime()) ||
+		if (seat.last_booked && (seat.last_booked.getTime() == new_booking.booked_date.getTime()) &&
 			seat.last_booked_by == new_booking.booked_by)
+			throw new Error("Seat occupied");
+		if (seat.last_booked && (seat.last_booked.getTime() == new_booking.booked_date.getTime()))
 			throw new Error("Seat occupied");
 		seat.last_booked = new_booking.booked_date;
 		seat.last_booked_by = new_booking.booked_by;
