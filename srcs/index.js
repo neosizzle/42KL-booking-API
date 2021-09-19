@@ -2,7 +2,8 @@
 * Imports
 */
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const cors = require('cors')
 require('dotenv').config();
 require("./db/mongoose");
 
@@ -14,12 +15,18 @@ const PORT = process.env.PORT || 3000;
 const bookingsRouter = require('./routes/bookings.js');
 const usersRouter = require('./routes/users.js');
 const seatsRouter = require('./routes/seats.js');
+const authRouter = require('./routes/auth.js');
 
 /*
 ** Server configuration
 */
 app.set('port', PORT);
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
+  });
 
 /*
 ** Root endpoint
@@ -34,6 +41,7 @@ app.get('/', (req, res, next) =>{
 app.use(bookingsRouter);
 app.use(seatsRouter);
 app.use(usersRouter);
+app.use(authRouter);
 
 /*
 ** Launch server

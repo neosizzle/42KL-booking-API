@@ -38,6 +38,17 @@ const seatSchema = mongoose.Schema({
 }, {timestamps : true, autoIndex: true});
 
 /*
+** Declare virtuals (Foreign keys)
+**
+** booknig Maps to an instances of Booking objects that has the seat name
+*/
+seatSchema.virtual('booking', {
+	ref : 'Booking',
+	localField : "name",
+	foreignField : "seat_name",
+})
+
+/*
 ** Export schema to model
 */
 const Seat = mongoose.model("Seat", seatSchema);

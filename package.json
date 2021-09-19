@@ -6,15 +6,18 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon srcs/index.js",
-	"seed": "node srcs/db/seed.js",
+    "seed": "node srcs/db/seed.js",
     "start": "node srcs/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.4",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "moment": "^2.29.1",
     "mongoose": "^6.0.5",
     "mongoose-seed": "^0.6.0",
     "path": "^0.12.7"
