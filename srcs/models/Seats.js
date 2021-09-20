@@ -11,9 +11,8 @@ const mongoose = require('mongoose')
 ** Schema declaration
 ** 
 ** name -				The seat name
-** section -			The seat section
-** last_booked - 		Date of last booking
-** last_booked_by	-	Username of the person who last booked
+** section -			The seat section (floor, block etc)
+** x_offs and y_offs	The x and y offset of the seat for rendering it on front end
 */
 const seatSchema = mongoose.Schema({
 	name : {
@@ -25,15 +24,15 @@ const seatSchema = mongoose.Schema({
 		type : String,
 		required : true
 	},
-	last_booked : {
-		type : Date,
+	x_offs : {
+		type : Number,
 		default : null,
-		required : false
+		required : false,
 	},
-	last_booked_by : {
-		type : String,
+	y_offs : {
+		type : Number,
 		default : null,
-		required : false
+		required : false,
 	}
 }, {timestamps : true, autoIndex: true});
 

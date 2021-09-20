@@ -3,7 +3,6 @@
 */
 
 const express = require('express');
-const { consoleLogEnabled } = require('mongoose-seed');
 const router = express.Router();
 const Booking = require("../models/Bookings")
 const Seat = require("../models/Seats");
@@ -90,7 +89,7 @@ router.post('/bookings', async (req, res)=>{
 		seat = await Seat.findOne({name : new_booking.seat_name})
 		user = await User.findOne({intra_name : new_booking.booked_by}).populate('bookings');
 		count = await Booking.countDocuments({booked_by : new_booking.booked_by, booked_date : new_booking.booked_date})
-		validate_booking(seat, user, count, new_booking, (err) => 
+		await validate_booking(seat, user, count, new_booking, (err) => 
 		{
 			if (err)
 			{
@@ -99,8 +98,6 @@ router.post('/bookings', async (req, res)=>{
 				throw error;
 			}
 		})
-		seat.last_booked = new_booking.booked_date;
-		seat.last_booked_by = new_booking.booked_by;
 		await new_booking.save();
 		await seat.save();
 		res.json({
@@ -122,18 +119,11 @@ router.post('/bookings', async (req, res)=>{
 router.delete('/bookings/:id', async (req, res)=>
 {
 	let booking;
-	let seat;
-	let	last_bookings;
-	let	last_booking;
 
 	try {
 		booking = await Booking.findByIdAndDelete(req.params.id);
 		if (!booking)
 			return res.status(404).json({error : "Booking not found"});
-		last_bookings = await Booking.find({seat_name : booking.seat_name});
-		//last_booking = last_bookings[last_booking.length - 1];
-		console.log(last_bookings);
-		seat = await Seat.findOne({name : booking.seat_name});
 		res.status(200).json({data : booking})
 	}
 	catch (error) {

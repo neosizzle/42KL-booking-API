@@ -1,8 +1,23 @@
 const moment = require('moment');
-
+const Bookings = require('../models/Bookings');
+const Seats = require('../models/Seats');
 
 /*
-**Helper function to validate booking
+** Helper function to check if seat is avail at current date
+** 
+** @param MongooseDocument seat	The seat object
+** @param Date date				The date that we want to check with
+*/
+const is_avail = async (seat, date) =>
+{
+	if (await Bookings.findOne({seat_name : seat.name, booked_date : date}))
+		return false;
+	else
+		return true;
+}
+
+/*
+** Helper function to validate booking
 ** 
 ** 1. Checks for booking limit per user (2)
 ** 2. Checks for 1 User trying to book 2 seats at the same day
@@ -18,7 +33,7 @@ const moment = require('moment');
 ** @param callback		The callback function to call
 ** 
 */
-const validate_booking = (seat, user, count, new_booking, callback)=>
+const validate_booking = async (seat, user, count, new_booking, callback)=>
 {
 	let curr_date;
 	let diff_time;
@@ -47,10 +62,7 @@ const validate_booking = (seat, user, count, new_booking, callback)=>
 		return callback("Invalid user");
 	if (!seat)
 		return callback("Seat not found");
-	if (seat.last_booked && (seat.last_booked.getTime() == new_booking.booked_date.getTime()) &&
-		seat.last_booked_by == new_booking.booked_by)
-		return callback("Seat occupied");
-	if (seat.last_booked && (seat.last_booked.getTime() == new_booking.booked_date.getTime()))
+	if (! await is_avail(seat, new_booking.booked_date))
 		return callback("Seat occupied");
 	callback(null);
 }
