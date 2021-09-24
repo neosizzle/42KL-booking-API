@@ -6,7 +6,12 @@
 ** Imports
 */
 var seeder = require("mongoose-seed");
-require("dotenv").config(); 
+require("dotenv").config();
+const seed_180_GF = require("./seed/182-181-180GF");
+const seed_180_1F = require("./seed/182-181-1801F");
+const seed_190_GF = require("./seed/190-191GF");
+const seed_190_1F = require("./seed/190-1911F");
+
 
 // Connect to MongoDB via Mongoose
 seeder.connect(process.env.MONGODB_URL, function() {
@@ -34,46 +39,10 @@ var data = [
     {
         "model": "Seat",
         "documents": [
-            {
-                "name": "A00",
-                "section" : "floor1"
-            },
-			{
-                "name": "A01",
-                "section" : "floor1"
-            },
-			{
-                "name": "A02",
-                "section" : "floor1"
-            },
-			{
-                "name": "A03",
-                "section" : "floor1"
-            },
-			{
-                "name": "A04",
-                "section" : "floor1"
-            },
-			{
-                "name": "B00",
-                "section" : "floor1"
-            },
-            {
-                "name": "B01",
-                "section": "floor2",
-            },
-			{
-                "name": "B02",
-                "section": "floor2",
-            },
-			{
-                "name": "B03",
-                "section": "floor2",
-            },
-			{
-                "name": "B04",
-                "section": "floor2",
-            }
+           seed_180_GF,
+		   seed_180_1F,
+		   seed_190_GF,
+		   seed_190_1F
         ]
     },
 	{
@@ -81,13 +50,13 @@ var data = [
         "documents": [
             {
 				"intra_id" : "1234567",
-				"intra_name" : "jng",
+				"intra_name" : "test",
 				"email" : "example@mail.com",
 				"admin" : 0
 			},
 			{
 				"intra_id" : "123s4567",
-				"intra_name" : "jsg",
+				"intra_name" : "asdf",
 				"email" : "examle@mail.com",
 				"admin" : 0
 			},

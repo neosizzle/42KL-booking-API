@@ -27,6 +27,10 @@ const bookingSchema = mongoose.Schema({
 	seat_name : {
 		type : String,
 		required : true
+	},
+	seat_section : {
+		type : String,
+		required : true
 	}
 }, {timestamps : true, autoIndex : true});
 

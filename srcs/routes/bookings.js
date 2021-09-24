@@ -37,19 +37,19 @@ router.get('/bookings', async (req, res)=>
 })
 
 /*
-** Get one booking from database which given the id
+** Get all the booking from user given 
 **
 ** 1. Attempt to get booking object in the database
 ** 	- If error, send error message and set status
 ** 	- if success, send result back to caller
 */
-router.get('/bookings/:id', async (req, res)=>
+router.get('/bookings/:user', async (req, res)=>
 {
 	let	result;
 
 	try
 	{
-		result = await Booking.findById(req.params.id).populate("seat");
+		result = await Booking.find({booked_by : req.params.user}).populate("seat");
 		res.json({
 			data : result,
 			seat : result.seat
@@ -83,7 +83,10 @@ router.post('/bookings', async (req, res)=>{
 	let error;
 
 	//might need to delete key property in the future
-	new_booking = new Booking(req.body);
+	new_booking = {
+		...req.body,
+		seat_section : null
+	}
 	try
 	{
 		seat = await Seat.findOne({name : new_booking.seat_name})
@@ -98,8 +101,8 @@ router.post('/bookings', async (req, res)=>{
 				throw error;
 			}
 		})
-		await new_booking.save();
-		await seat.save();
+		new_booking.seat_section = seat.section;
+		await new Booking(new_booking).save();
 		res.json({
 			data : new_booking
 		});

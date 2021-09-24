@@ -20,7 +20,7 @@ router.post('/auth/get_token/:code', (req,res)=>
 	axios.post(url_str)
 	.then((response) => 
 	{
-		console.log(response.data)
+		//console.log(response.data)
 		res.send(response.data);
 	})
 	.catch((err) => 

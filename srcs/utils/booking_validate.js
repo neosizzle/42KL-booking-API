@@ -36,14 +36,14 @@ const is_avail = async (seat, date) =>
 const validate_booking = async (seat, user, count, new_booking, callback)=>
 {
 	let curr_date;
-	let diff_time;
+	let	booked_date;
 	let	diff_days;
 	let	i;
 	let	bookings_ahead;
 
-	curr_date = new Date();
-	diff_time = new_booking.booked_date - curr_date;
-	diff_days = Math.ceil(diff_time / (1000 * 60 * 60 * 24));
+	curr_date = moment();
+	booked_date = moment(new_booking.booked_date);
+	diff_days = booked_date.diff(curr_date, "days");
 	i = user.bookings.length;
 	bookings_ahead = 0;
 	while (--i >= 0) {
@@ -62,6 +62,8 @@ const validate_booking = async (seat, user, count, new_booking, callback)=>
 		return callback("Invalid user");
 	if (!seat)
 		return callback("Seat not found");
+	if (!seat.is_activated)
+		return callback("Seat not activated for booking!")
 	if (! await is_avail(seat, new_booking.booked_date))
 		return callback("Seat occupied");
 	callback(null);

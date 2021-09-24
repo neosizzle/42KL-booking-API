@@ -12,7 +12,8 @@ const mongoose = require('mongoose')
 ** 
 ** name -				The seat name
 ** section -			The seat section (floor, block etc)
-** x_offs and y_offs	The x and y offset of the seat for rendering it on front end
+** transformation -		The CSS transformation properties for this seat to be rendered on screen
+** x_offs and y_offs-	The x and y offset of the seat for rendering it on front end
 */
 const seatSchema = mongoose.Schema({
 	name : {
@@ -25,14 +26,24 @@ const seatSchema = mongoose.Schema({
 		required : true
 	},
 	x_offs : {
-		type : Number,
+		type : String,
 		default : null,
 		required : false,
 	},
 	y_offs : {
-		type : Number,
+		type : String,
 		default : null,
 		required : false,
+	},
+	transformation : {
+		type : String,
+		default : null,
+		required : false,
+	},
+	is_activated : {
+		type : Boolean,
+		default : false,
+		required : true,
 	}
 }, {timestamps : true, autoIndex: true});
 

@@ -77,20 +77,27 @@ router.get('/users/:name', async (req, res)=>{
 */
 router.post('/users', async (req, res)=>{
 	let	new_user;
-	new_user = new User(req.body);
+	let existing_user;
 
+	new_user = new User(req.body);
+	existing_user = await User.findOne({intra_name : new_user.intra_name}).populate("bookings");
 	try
 	{
 		//might need to delete key property in the future
-		if (await User.exists({name : new_user}))
-			return res.json({});
+		if (new_user.intra_name && existing_user)
+			return res.json({
+				data : existing_user,
+				bookings : existing_user.bookings
+			});
 		await new_user.save();
 		res.json({
-			data : req.body
+			data : new_user,
+			bookings : new_user.bookings
 		});
 	}
 	catch (e)
 	{
+		console.error(e.message)
 		res.status(500).json({error : e.message});
 	}
 })
