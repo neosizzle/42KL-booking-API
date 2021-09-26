@@ -30,5 +30,28 @@ router.post('/auth/get_token/:code', (req,res)=>
 	})
 })
 
+/*
+** This endpoint serves as a proxy to add Access-Control-Allow-Origin to me endpoitn 
+** for 42 network API
+*/
+router.get("/auth/me/:token", (req,res) => 
+{
+	let	token;
+	let	url;
+
+	token = req.params.token;
+	url = `https://api.intra.42.fr/v2/me?access_token=${token}`;
+	axios.get(url)
+	.then((response) => 
+	{
+		console.log(response.data)
+		res.send(response.data);
+	})
+	.catch((err) => 
+	{
+		console.log(err)
+		res.status(500).send(err.message)
+	})
+})
 
 module.exports = router;
