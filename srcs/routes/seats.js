@@ -3,9 +3,15 @@
 */
 
 const express = require('express');
+const Booking = require('../models/Bookings');
 const router = express.Router();
 const Seat = require("../models/Seats")
-const { generate_avail } = require("../utils/generate_avail")
+const { generate_avail } = require("../utils/generate_avail");
+const sendDeletionEmail = require("../utils/send_del_email")
+const moment = require("moment");
+const User = require('../models/Users');
+const adminAuth = require("../middleware/adminAuth");
+
 
 /*
 ** List all seats
@@ -66,6 +72,7 @@ router.get('/seats/section_date/', async (req, res)=>{
 		result = {
 			error : e.message
 		}
+		console.error(result);
 		res.status(500).json(result);		
 	}
 })
@@ -97,6 +104,7 @@ router.get('/seats/:name', async (req, res)=>{
 		result = {
 			error : e.message
 		}
+		console.error(result);
 		res.status(500).json(result);		
 	}
 })
@@ -123,6 +131,62 @@ router.post('/seats', async (req, res)=>{
 	catch (e)
 	{
 		res.status(500).json({error : e.message});
+	}
+})
+
+
+/*
+** Marks a seat as activated given the name
+*/
+router.patch('/seats/activate/:name', adminAuth, async (req,res) => {
+	let	seat;
+
+	try
+	{
+		seat = await Seat.findOneAndUpdate({name : req.params.name} , {is_activated : true})
+		if (!seat)
+			return res.status(404).json({error : "Not found"});
+		return res.json({
+			data : seat
+		});
+	}
+	catch (error) 
+	{
+		console.error(error);
+		res.status(500).json({error : error.message});
+	}
+})
+
+/*
+** Marks a seat as deactivated given the name, also deletes upcoming bookings that
+** are made on this seat
+*/
+router.patch('/seats/deactivate/:name', adminAuth, async (req,res) => {
+	let	seat;
+	let bookings;
+	let currDate;
+	let user;
+
+	try
+	{
+		currDate = moment().format("YYYY-MM-DD");
+		seat = await Seat.findOneAndUpdate({name : req.params.name} , {is_activated : false})
+		bookings = await Booking.find({seat_name : req.params.name, booked_date : {$gte : currDate}})
+		bookings.forEach(async (booking) => {
+			user = await User.findOne({intra_name : booking.booked_by});
+			sendDeletionEmail(booking, user.email);
+		});
+		await Booking.deleteMany({seat_name : req.params.name, booked_date : {$gte : currDate}})
+		if (!seat)
+			return res.status(404).json({error : "Not found"});
+		return res.json({
+			data : seat
+		});
+	}
+	catch (error) 
+	{
+		console.error(error);
+		res.status(500).json({error : error.message});
 	}
 })
 

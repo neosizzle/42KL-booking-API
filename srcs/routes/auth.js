@@ -44,7 +44,7 @@ router.get("/auth/me/:token", (req,res) =>
 	axios.get(url)
 	.then((response) => 
 	{
-		console.log(response.data)
+		//console.log(response.data)
 		res.send(response.data);
 	})
 	.catch((err) => 

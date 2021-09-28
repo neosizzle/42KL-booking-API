@@ -4,7 +4,7 @@ module.exports = [
 		"section": "182/181/180, GF",
 		"x_offs": "1.5%",
 		"y_offs": "5%",
-		"is_activated": true,
+		"is_activated": false,
 	},
 	{
 		"name": "A01",

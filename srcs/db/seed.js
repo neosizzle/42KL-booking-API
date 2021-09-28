@@ -72,6 +72,12 @@ var data = [
 				"email" : "nomail@mail.com",
 				"admin" : 0
 			},
+			{
+				"intra_name" : "testadmin",
+				"intra_id" : "admin",
+				"email" : "jh_ngg@ymail.com",
+				"admin" : true
+			}
         ]
     }
 ];

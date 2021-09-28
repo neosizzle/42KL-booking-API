@@ -8,7 +8,7 @@ const Booking = require("../models/Bookings")
 const Seat = require("../models/Seats");
 const User = require('../models/Users');
 const { validate_booking } = require("../utils/booking_validate");
-const { sendConfirmationEmail } = require("../utils/sendEmail");
+const sendConfirmationEmail = require("../utils/send_email");
 
 /*
 ** List all bookings

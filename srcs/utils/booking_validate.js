@@ -44,8 +44,12 @@ const validate_booking = async (seat, user, count, new_booking, callback)=>
 	curr_date = moment();
 	booked_date = moment(new_booking.booked_date);
 	diff_days = booked_date.diff(curr_date, "days");
-	i = user.bookings.length;
 	bookings_ahead = 0;
+	if (!user)
+		return callback("Invalid user");
+	if (!seat)
+		return callback("Seat not found");
+	i = user.bookings.length;
 	while (--i >= 0) {
 		if (user.bookings[i].booked_date >= moment(curr_date).startOf('day'))
 			bookings_ahead++;
@@ -58,10 +62,6 @@ const validate_booking = async (seat, user, count, new_booking, callback)=>
 		return callback("Can only book at most 5 days ahead");
 	if (count > 0)
 		return callback("Can only book one seat per day");
-	if (!user)
-		return callback("Invalid user");
-	if (!seat)
-		return callback("Seat not found");
 	if (!seat.is_activated)
 		return callback("Seat not activated for booking!")
 	if (! await is_avail(seat, new_booking.booked_date))

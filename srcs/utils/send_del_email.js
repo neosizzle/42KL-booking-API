@@ -1,7 +1,7 @@
 const axios = require("axios");
 require('dotenv').config();
 
-const sendConfirmationEmail = (new_booking, to_email) =>
+const sendDeletionEmail = (booking, to_email) =>
 {
 	let booked_date;
 	let	booked_by;
@@ -9,13 +9,13 @@ const sendConfirmationEmail = (new_booking, to_email) =>
 	let seat_section;
 	let	payload;
 
-	booked_date = new_booking.booked_date;
-	booked_by = new_booking.booked_by;
-	seat_name = new_booking.seat_name;
-	seat_section = new_booking.seat_section;
+	booked_date = booking.booked_date;
+	booked_by = booking.booked_by;
+	seat_name = booking.seat_name;
+	seat_section = booking.seat_section;
 	payload = {
 		service_id : process.env.EMAILJS_SERVICE_ID,
-		template_id: process.env.EMAILJS_TEMPLATE_ID,
+		template_id: process.env.EMAILJS_TEMPLATE_DELETE_ID,
 		user_id: process.env.EMAILJS_USER_ID,
 		accessToken : process.env.EMAILJS_ACCESS_TOKEN,
 		template_params : {
@@ -33,6 +33,4 @@ const sendConfirmationEmail = (new_booking, to_email) =>
 
 }
 
-module.exports = {
-	sendConfirmationEmail
-}
+module.exports = sendDeletionEmail
