@@ -92,7 +92,7 @@ router.post('/users', async (req, res)=>{
 		await new_user.save();
 		res.json({
 			data : new_user,
-			bookings : new_user.bookings
+			bookings : []
 		});
 	}
 	catch (e)

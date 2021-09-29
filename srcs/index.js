@@ -24,8 +24,8 @@ app.set('port', PORT);
 app.use(bodyParser.json());
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", process.env.ALLOWED_ORIGIN);
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	res.header("Access-Control-Allow-Methods", "GET, POST, DELETE");
+	res.header("Access-Control-Allow-Headers", "Origin, userID, X-Requested-With, Content-Type, Accept, Authorization");
+	res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PATCH");
 	next();
   });
 
