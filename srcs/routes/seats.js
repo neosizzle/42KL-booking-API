@@ -110,6 +110,39 @@ router.get('/seats/:name', async (req, res)=>{
 })
 
 /*
+** Find seats which reside on the same section
+** 
+** 1. Attempt to the seat object in the database
+** 	- If error, send error message and set status
+** 	- if success, send result back to caller
+*/
+router.get('/seats/section/:section', async (req, res)=>{
+	let section;
+	let	result;
+
+	section = req.params.section;
+	try
+	{
+		result = await Seat.find({section : section}).populate('booking');
+		if (!result)
+			return res.status(404).json({error : "Not found"});
+		res.json({
+			data : result,
+			bookings : result.booking
+		});
+	}
+	catch (e)
+	{
+		result = {
+			error : e.message
+		}
+		console.error(result);
+		res.status(500).json(result);		
+	}
+})
+
+
+/*
 ** Creates a new seat in the database
 ** 
 ** 1. Attempt to create new seat in database
