@@ -56,8 +56,8 @@ const validate_booking = async (seat, user, count, new_booking, callback)=>
 		if (bookings_ahead >= 2)
 			return callback("At most 2 upcoming bookings per user");
 	}
-	if (diff_days < 0)
-		return callback("Can only book in future days");
+	// if (diff_days < 0)
+	// 	return callback("Can only book in future days");
 	if (diff_days > 5)
 		return callback("Can only book at most 5 days ahead");
 	if (count > 0)

@@ -55,24 +55,6 @@ var data = [
 				"admin" : 0
 			},
 			{
-				"intra_id" : "123s4567",
-				"intra_name" : "asdf",
-				"email" : "examle@mail.com",
-				"admin" : 0
-			},
-			{
-				"intra_id" : "123456sdf2354357",
-				"intra_name" : "user",
-				"email" : "eupppppe@mail.com",
-				"admin" : 0
-			},
-			{
-				"intra_id" : "one1234sdBsdf234jv8dn3",
-				"intra_name" : "asd",
-				"email" : "nomail@mail.com",
-				"admin" : 0
-			},
-			{
 				"intra_name" : "testadmin",
 				"intra_id" : "admin",
 				"email" : "jh_ngg@ymail.com",
