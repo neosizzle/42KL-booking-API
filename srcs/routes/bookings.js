@@ -9,6 +9,8 @@ const Seat = require("../models/Seats");
 const User = require('../models/Users');
 const { validate_booking } = require("../utils/booking_validate");
 const sendConfirmationEmail = require("../utils/send_email");
+const sendDeletionEmail = require("../utils/send_del_email")
+
 
 /*
 ** List all bookings
@@ -65,6 +67,29 @@ router.get('/bookings/:user', async (req, res)=>
 	}
 })
 
+/*
+** Get all the booking for a given date
+*/
+router.get('/bookings/date/:date', async (req, res)=>
+{
+	let	result;
+
+	try
+	{
+		result = await Booking.find({booked_date : req.params.date}).populate("seat");
+		res.json({
+			data : result,
+			seat : result.seat
+		});
+	}
+	catch (e)
+	{
+		result = {
+			error : e.message
+		}
+		res.status(500).json(result);
+	}
+})
 
 /*
 ** Creates a new booking in the database
@@ -124,12 +149,15 @@ router.post('/bookings', async (req, res)=>{
 router.delete('/bookings/:id', async (req, res)=>
 {
 	let booking;
+	let user;
 
 	try {
 		booking = await Booking.findByIdAndDelete(req.params.id);
 		if (!booking)
 			return res.status(404).json({error : "Booking not found"});
-		res.status(200).json({data : booking})
+		user = await User.findOne({intra_name : booking.booked_by});
+		sendDeletionEmail(booking, user.email);
+		res.status(200).json({data : booking});
 	}
 	catch (error) {
 		console.log(error)

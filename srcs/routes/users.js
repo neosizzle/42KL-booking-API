@@ -8,6 +8,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require("../models/Users");
+const axios = require("axios")
 
 /*
 ** List all the users in the collection
@@ -38,22 +39,43 @@ router.get('/users', async (req, res)=>
 
 /*
 ** Find one user which has the name provided
+** The access token can be provided to add the user inside db
+** In case of user not found
 ** 
 ** 1. Attempt to user object in the database
-** 	- If error, send error message and set status
+** 	- If error and token is provided
+**		- Check if user is in 42 network db
+**			- if yes, add new user in db and return result
+**			- if no, Throw error
+** 	- If error and no token,
+**  	- throw err
 ** 	- if success, send result back to caller
 */
 router.get('/users/:name', async (req, res)=>{
 	let name;
 	let	result;
-	let temp;
+	let token;
+	let response;
 
 	name = req.params.name;
+	token = req.query.token;
 	try
 	{
 		result = await User.findOne({intra_name : name}).populate('bookings');
-		if (!result)
+		if (!result && !token)
 			return res.status(404).json({error : "Not found"});
+		else if (!result)
+		{
+			response = await axios.get(`https://api.intra.42.fr/v2/users?access_token=${token}&campus_id=34&filter[login]=${name}`)
+			if (response.data.length == 0) return res.status(404).json({error : "Not found"});
+			result = new User({
+				intra_id : response.data[0].id,
+				intra_name : response.data[0].login,
+				email : response.data[0].email,
+				admin : response.data[0]["staff?"]
+			})
+			await result.save();
+		}
 		res.json({
 			data : result,
 			bookings : result.bookings
@@ -61,6 +83,7 @@ router.get('/users/:name', async (req, res)=>{
 	}
 	catch (e)
 	{
+		console.log(e)
 		result = {
 			error : e.message
 		}

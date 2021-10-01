@@ -54,4 +54,29 @@ router.get("/auth/me/:token", (req,res) =>
 	})
 })
 
+/*
+** This endpoint will get all the users in 42KL campus given the token
+*/
+router.get("/auth/campus_users/", (req,res) => 
+{
+	let	token;
+	let	url;
+	let login;
+
+	token = req.query.token;
+	login = req.query.login;
+	url = `https://api.intra.42.fr/v2/users?access_token=${token}&campus_id=34&filter[login]=${login}`;
+	axios.get(url)
+	.then((response) => 
+	{
+		//console.log(response.data)
+		res.send(response.data);
+	})
+	.catch((err) => 
+	{
+		console.log(err)
+		res.status(500).send(err.message)
+	})
+})
+
 module.exports = router;

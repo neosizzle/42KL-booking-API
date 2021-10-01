@@ -111,7 +111,6 @@ router.get('/seats/:name', async (req, res)=>{
 
 /*
 ** Find seats which reside on the same section
-** 
 ** 1. Attempt to the seat object in the database
 ** 	- If error, send error message and set status
 ** 	- if success, send result back to caller
