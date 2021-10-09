@@ -9,6 +9,7 @@ const express = require('express');
 const router = express.Router();
 const User = require("../models/Users");
 const axios = require("axios")
+const userAuth = require("../middleware/userAuth")
 
 /*
 ** List all the users in the collection
@@ -98,7 +99,7 @@ router.get('/users/:name', async (req, res)=>{
 ** 	- If error, send error message and set status
 ** 	- if success, send result back to caller
 */
-router.post('/users', async (req, res)=>{
+router.post('/users', userAuth, async (req, res)=>{
 	let	new_user;
 	let existing_user;
 

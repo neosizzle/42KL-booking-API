@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors')
 require('dotenv').config();
 require("./db/mongoose");
+const userAuth = require("./middleware/userAuth")
 
 /*
 ** Initialize constants
@@ -32,7 +33,7 @@ app.use((req, res, next) => {
 /*
 ** Root endpoint
 */
-app.get('/', (req, res, next) =>{
+app.get('/', userAuth, (req, res, next) =>{
 	res.send("<h1>This is the root of 42KL booking API</h1>");
 })
 

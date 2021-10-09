@@ -10,7 +10,7 @@ const User = require('../models/Users');
 const { validate_booking } = require("../utils/booking_validate");
 const sendConfirmationEmail = require("../utils/send_email");
 const sendDeletionEmail = require("../utils/send_del_email")
-
+const userAuth = require("../middleware/userAuth")
 
 /*
 ** List all bookings
@@ -101,7 +101,7 @@ router.get('/bookings/date/:date', async (req, res)=>
 ** 5. Add booking object to database
 ** 6. If any error happens, return the error message 
 */
-router.post('/bookings', async (req, res)=>{
+router.post('/bookings', userAuth, async (req, res)=>{
 	let	new_booking;
 	let	seat;
 	let	user;
@@ -146,7 +146,7 @@ router.post('/bookings', async (req, res)=>{
 ** Deletes a booking fron the database given the booking id
 ** Also removes seat last_booked and last_booked_by
 */
-router.delete('/bookings/:id', async (req, res)=>
+router.delete('/bookings/:id', userAuth, async (req, res)=>
 {
 	let booking;
 	let user;

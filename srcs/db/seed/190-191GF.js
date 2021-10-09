@@ -77,7 +77,7 @@ module.exports = [
 		"is_activated": false,
 	},
 	{
-		"name": "u90z03s082",
+		"name": "u90z03s02",
 		"section": "190/191, GF",
 		"x_offs": "78.5%",
 		"y_offs": "5%",
