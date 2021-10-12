@@ -1,6 +1,7 @@
 const moment = require('moment');
 const Bookings = require('../models/Bookings');
 const Seats = require('../models/Seats');
+const Ticket = require("../models/Tickets");
 
 /*
 ** Helper function to check if seat is avail at current date
@@ -40,11 +41,28 @@ const validate_booking = async (seat, user, count, new_booking, callback)=>
 	let	diff_days;
 	let	i;
 	let	bookings_ahead;
+	let ticket;
+	let days_in_advance;
+	let max_booking_instances;
 
+	//set needed vars
 	curr_date = moment().startOf('day');
 	booked_date = moment(new_booking.booked_date).startOf('day');
 	diff_days = booked_date.diff(curr_date, "days");
 	bookings_ahead = 0;
+	try{
+		ticket = await Ticket.findOne({});
+		days_in_advance = ticket.days_in_advance;
+		max_booking_instances = ticket.max_booking_instances;
+	}
+	catch(e)
+	{
+		console.log(e.message);
+		days_in_advance = 5;
+		max_booking_instances = 2;
+	}
+
+	//does validation
 	if (!user)
 		return callback("Invalid user");
 	if (!seat)
@@ -53,13 +71,13 @@ const validate_booking = async (seat, user, count, new_booking, callback)=>
 	while (--i >= 0) {
 		if (moment(user.bookings[i].booked_date).startOf('day') > curr_date)
 			bookings_ahead++;
-		if (bookings_ahead >= 2)
-			return callback("At most 2 upcoming bookings per user");
+		if (bookings_ahead >= max_booking_instances)
+			return callback(`At most ${max_booking_instances} upcoming bookings per user`);
 	}
 	if (diff_days < 1)
 		return callback("Can only book in future days");
-	if (diff_days > 5)
-		return callback("Can only book at most 5 days ahead");
+	if (diff_days > days_in_advance)
+		return callback(`Can only book at most ${days_in_advance} days ahead`);
 	if (count > 0)
 		return callback("Can only book one seat per day");
 	if (!seat.is_activated)

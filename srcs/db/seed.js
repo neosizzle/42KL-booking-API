@@ -20,7 +20,8 @@ seeder.connect(process.env.MONGODB_URL, function() {
   seeder.loadModels([
     "srcs/models/Seats",
 	"srcs/models/Users",
-	"srcs/models/Bookings"
+	"srcs/models/Bookings",
+	"srcs/models/Tickets"
   ]);
  
   // Clear specified collections
@@ -61,5 +62,14 @@ var data = [
 				"admin" : true
 			}
         ]
-    }
+    },
+	{
+		"model" : "Ticket",
+		"documents" : [
+			{
+				"days_in_advance" : 5,
+				"max_booking_instances" : 2
+			}
+		]
+	}
 ];

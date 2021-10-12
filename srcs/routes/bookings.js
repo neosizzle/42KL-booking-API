@@ -7,6 +7,7 @@ const router = express.Router();
 const Booking = require("../models/Bookings")
 const Seat = require("../models/Seats");
 const User = require('../models/Users');
+const Ticket = require("../models/Tickets");
 const { validate_booking } = require("../utils/booking_validate");
 const sendConfirmationEmail = require("../utils/send_email");
 const sendDeletionEmail = require("../utils/send_del_email")
@@ -92,6 +93,33 @@ router.get('/bookings/date/:date', async (req, res)=>
 })
 
 /*
+** Gets booking ticket constraints
+*/
+router.get('/booking_ticket', async (req, res, next)=>{
+	let ticket;
+
+	try{
+		ticket = await Ticket.findOne({})
+		if (!ticket)
+		{
+			return res.json({
+				data : {
+					"days_in_advance" : 5,
+					"max_booking_instances" : 2
+				}
+			});
+		}
+		return res.json({
+			data : ticket
+		});
+	}
+	catch(e)
+	{
+		return res.status(500).json({error : e.message})
+	}
+})
+
+/*
 ** Creates a new booking in the database
 ** 
 ** 1. Create new booking obejct
@@ -138,6 +166,30 @@ router.post('/bookings', userAuth, async (req, res)=>{
 	{
 		if (e.code == "CUSTOM")
 			return res.status(400).json({error : e.message});
+		res.status(500).json({error : e.message});
+	}
+})
+
+/*
+** Edit booking ticket constraints
+*/
+router.patch('/booking_ticket', async (req, res, next)=>{
+
+	let newTicket;
+	let result;
+
+	newTicket = req.body;
+	try{
+		result = await Ticket.findOneAndUpdate({}, newTicket);
+		if (!result)
+		{
+			newTicket = new Ticket(req.body)
+			await newTicket.save();
+		}
+		return res.json({data : result})
+	}
+	catch(e)
+	{
 		res.status(500).json({error : e.message});
 	}
 })
